@@ -15,6 +15,10 @@ spring:
     properties:
       hibernate:
         show_sql: true
+ead:
+  api:
+    url:
+      user: 'http://localhost:8087'
 
 
 
