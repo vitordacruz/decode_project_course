@@ -20,13 +20,13 @@ import java.util.UUID;
 
 @Log4j2
 @Component
-public class CourseClient {
+public class AuthUserCourseClient {
 
     @Autowired
     private RestTemplate restTemplate;
 
     @Value("${ead.api.url.user}")
-    String REQUEST_URL_URSER;
+    String REQUEST_URL_AUTH_USER;
 
     @Autowired
     UtilsService utilsService;
@@ -34,7 +34,7 @@ public class CourseClient {
     public Page<UserDTO> getAllUsersByCourse(UUID courseId, Pageable pageable) {
         List<UserDTO> searchResult = null;
         ResponseEntity<ResponsePageDTO<UserDTO>> result = null;
-        String url = REQUEST_URL_URSER + utilsService.createUrlGetAllUsersByCourse(courseId, pageable);
+        String url = REQUEST_URL_AUTH_USER + utilsService.createUrlGetAllUsersByCourse(courseId, pageable);
         log.debug("Request URL: {} ", url);
         log.info("Request URL: {} ", url);
         try{
@@ -47,6 +47,11 @@ public class CourseClient {
         }
         log.info("Ending request /users courseId {} ", courseId);
         return result.getBody();
+    }
+
+    public ResponseEntity<UserDTO> getOneUserById(UUID userId) {
+        String url = REQUEST_URL_AUTH_USER + "/users/" + userId;
+        return restTemplate.exchange(url, HttpMethod.GET, null, UserDTO.class);
     }
 
 }
