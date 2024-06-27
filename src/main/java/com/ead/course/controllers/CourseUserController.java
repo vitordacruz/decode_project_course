@@ -1,6 +1,6 @@
 package com.ead.course.controllers;
 
-import com.ead.course.clients.AuthUserCourseClient;
+import com.ead.course.clients.AuthUserClient;
 import com.ead.course.dtos.SubscriptionDto;
 import com.ead.course.dtos.UserDTO;
 import com.ead.course.enums.UserStatus;
@@ -29,7 +29,7 @@ import java.util.UUID;
 public class CourseUserController {
 
     @Autowired
-    AuthUserCourseClient authUserCourseClient;
+    private AuthUserClient authUserClient;
     @Autowired
     private CourseService courseService;
     @Autowired
@@ -43,7 +43,7 @@ public class CourseUserController {
                     direction = Sort.Direction.ASC) Pageable pageable,
             @PathVariable(value = "courseId") UUID courseId) {
 
-        return ResponseEntity.status(HttpStatus.OK).body(authUserCourseClient.getAllUsersByCourse(courseId, pageable));
+        return ResponseEntity.status(HttpStatus.OK).body(authUserClient.getAllUsersByCourse(courseId, pageable));
 
     }
 
@@ -60,7 +60,7 @@ public class CourseUserController {
             return ResponseEntity.status(HttpStatus.CONFLICT).body("Error: subscription already exists!");
         } else {
             try {
-                responseUser = authUserCourseClient.getOneUserById(subscription.getUserId());
+                responseUser = authUserClient.getOneUserById(subscription.getUserId());
                 if (responseUser.getBody().getUserStatus().equals(UserStatus.BLOCKED)) {
                     return ResponseEntity.status(HttpStatus.CONFLICT).body("User is blocked!");
                 }
@@ -69,7 +69,7 @@ public class CourseUserController {
                     return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User Not Found");
                 }
             }
-            CourseUserModel courseUserModel = courseUserService.save(courseModelOptional.get().convertToCourseUserModel(subscription.getUserId()));
+            CourseUserModel courseUserModel = courseUserService.saveAndSendSubscriptionUserInCourse(courseModelOptional.get().convertToCourseUserModel(subscription.getUserId()));
 
             return ResponseEntity.status(HttpStatus.CREATED).body(courseUserModel);
 
