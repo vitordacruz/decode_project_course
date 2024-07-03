@@ -4,16 +4,17 @@ import com.ead.course.configs.DateConfig;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 
 import javax.persistence.*;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
-@Getter
-@Setter
+@Data
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @Entity
 @Table(name = "TB_LESSONS")
@@ -34,6 +35,7 @@ public class LessonModel implements Serializable {
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = DateConfig.DATETIME_FORMAT)
     private LocalDateTime creationDate;
 
+    @ToString.Exclude
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
     private ModuleModel module;
