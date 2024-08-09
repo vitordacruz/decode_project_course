@@ -6,7 +6,7 @@ spring:
   application:
     name: ead-course-service
   datasource:
-    url:  jdbc:mysql://localhost:3306/ead_course?useTimezone=true&serverTimezone=America/Sao_Paulo
+    url:  jdbc:mysql://localhost:3306/ead_course_v2?useTimezone=true&serverTimezone=America/Sao_Paulo
     username: ${DB_USER}
     password: ${DB_PASSWORD}
   jpa:
@@ -18,6 +18,9 @@ spring:
     properties:
       hibernate:
         show_sql: true
+  rabbitmq:
+    addresses: ${RABBIT_MQ_URL}
+
 ead:
   api:
     url:
